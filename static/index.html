@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Patch_notes</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <canvas id="bg-canvas"></canvas>
+
+  <div id="app" class="hidden">
+
+    <header class="topbar">
+      <div class="topbar-logo"><span>Patch_notes</span></div>
+      <div class="search-box">
+        <span class="search-icon"></span>
+        <input type="text" id="search-input" placeholder="Поиск заметок">
+      </div>
+      <div class="topbar-right">
+        <span id="user-name"></span>
+        <button id="logout-btn" class="logout-btn">Выйти</button>
+      </div>
+    </header>
+
+    <div class="app-body">
+      <aside class="sidebar">
+        <button class="nav-btn active" data-view="notes"><span>Заметки</span></button>
+        <button class="nav-btn" data-view="trash"><span>Корзина</span></button>
+      </aside>
+
+      <main class="content">
+        <div class="content-header">
+          <h2 id="view-title">Заметки</h2>
+          <div class="content-actions">
+            <select id="sort-select" title="Сортировка">
+              <option value="custom">По порядку</option>
+              <option value="updated-desc">Сначала изменённые</option>
+              <option value="updated-asc">Сначала старые (изменение)</option>
+              <option value="created-desc">Сначала новые</option>
+              <option value="created-asc">Сначала старые</option>
+              <option value="title-asc">По названию (А–Я)</option>
+              <option value="title-desc">По названию (Я–А)</option>
+            </select>
+            <button id="new-note-btn">＋ Создать заметку</button>
+          </div>
+        </div>
+        <div id="notes-grid"></div>
+        <p id="empty-msg"></p>
+      </main>
+    </div>
+
+    <footer class="site-footer">
+      <div class="site-footer-inner">
+        <span>2026 Заметки</span>
+        <span class="sep">·</span>
+        <span>Приватный сервис для ваших заметок</span>
+      </div>
+    </footer>
+
+    <div id="editor-overlay" class="hidden">
+      <div class="editor">
+        <input type="text" id="note-title" placeholder="Заголовок">
+        <textarea id="note-text" placeholder="Заметка..." rows="8"></textarea>
+        <p id="editor-meta"></p>
+        <div class="editor-buttons">
+          <button id="editor-delete" class="red-btn"></button>
+          <button id="editor-restore" class="hidden"></button>
+          <span class="spacer"></span>
+          <button id="editor-cancel">Отмена</button>
+          <button id="editor-save" class="blue-btn">Сохранить</button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <script src="bg.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

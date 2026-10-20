@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Регистрация — Заметки</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body class="auth-page" data-mode="register">
+  <canvas id="bg-canvas"></canvas>
+
+  <form id="auth-form" class="auth-card">
+    <div class="auth-logo"></div>
+    <h1>Регистрация</h1>
+    <p class="auth-hint">Создайте новый аккаунт</p>
+    <input type="text" id="auth-login" placeholder="Логин (3–32 символа)" required autocomplete="username" minlength="3" maxlength="32">
+    <input type="password" id="auth-pass" placeholder="Пароль (не менее 6 символов)" required autocomplete="new-password" minlength="6">
+    <input type="password" id="auth-pass-confirm" placeholder="Повторите пароль" required autocomplete="new-password" minlength="6">
+    <p id="auth-error"></p>
+    <button type="submit" id="auth-btn" class="blue-btn">Зарегистрироваться</button>
+    <a href="login.html" class="link-btn">Уже есть аккаунт? Войти</a>
+  </form>
+
+  <footer class="site-footer">
+    <div class="site-footer-inner">
+      <span>2026 Заметки</span>
+      <span class="sep">·</span>
+      <span>Приватный сервис для ваших заметок</span>
+    </div>
+  </footer>
+
+  <script src="bg.js"></script>
+  <script src="auth-page.js"></script>
+</body>
+</html>
