@@ -13,11 +13,14 @@
   <div id="app" class="hidden">
 
     <header class="topbar">
+      <button id="sidebar-toggle" class="link-btn" style="font-size: 20px; padding: 0 10px 0 0; color: var(--purple);">☰</button>
       <div class="topbar-logo"><span>Patch_notes</span></div>
+      
       <div class="search-box">
         <span class="search-icon"></span>
         <input type="text" id="search-input" placeholder="Поиск заметок">
       </div>
+      
       <div class="topbar-right">
         <span id="user-name"></span>
         <button id="logout-btn" class="logout-btn">Выйти</button>
@@ -25,24 +28,40 @@
     </header>
 
     <div class="app-body">
-      <aside class="sidebar">
+      <aside class="sidebar" id="sidebar">
         <button class="nav-btn active" data-view="notes"><span>Заметки</span></button>
         <button class="nav-btn" data-view="trash"><span>Корзина</span></button>
+        
+        <div class="folders-section">
+          <div class="folders-header">
+            <span>Папки</span>
+            <button id="add-folder-btn" class="link-btn" title="Новая папка">+</button>
+          </div>
+          <div id="folders-list"></div>
+        </div>
       </aside>
 
       <main class="content">
         <div class="content-header">
           <h2 id="view-title">Заметки</h2>
           <div class="content-actions">
-            <select id="sort-select" title="Сортировка">
-              <option value="custom">По порядку</option>
-              <option value="updated-desc">Сначала изменённые</option>
-              <option value="updated-asc">Сначала старые (изменение)</option>
-              <option value="created-desc">Сначала новые</option>
-              <option value="created-asc">Сначала старые</option>
-              <option value="title-asc">По названию (А–Я)</option>
-              <option value="title-desc">По названию (Я–А)</option>
-            </select>
+
+            <div class="custom-select" id="sort-dropdown">
+              <div class="custom-select-trigger" id="sort-trigger">
+                <span id="sort-label">По порядку</span>
+                <span class="arrow">▼</span>
+              </div>
+              <div class="custom-select-options hidden" id="sort-options">
+                <div data-value="custom">По порядку</div>
+                <div data-value="updated-desc">Сначала изменённые</div>
+                <div data-value="updated-asc">Сначала старые (изменение)</div>
+                <div data-value="created-desc">Сначала новые</div>
+                <div data-value="created-asc">Сначала старые</div>
+                <div data-value="title-asc">По названию (А–Я)</div>
+                <div data-value="title-desc">По названию (Я–А)</div>
+              </div>
+            </div>
+
             <button id="new-note-btn">＋ Создать заметку</button>
           </div>
         </div>
@@ -53,7 +72,7 @@
 
     <footer class="site-footer">
       <div class="site-footer-inner">
-        <span>2026 Заметки</span>
+        <span>2026 Patch_notes</span>
         <span class="sep">·</span>
         <span>Приватный сервис для ваших заметок</span>
       </div>
@@ -70,6 +89,18 @@
           <span class="spacer"></span>
           <button id="editor-cancel">Отмена</button>
           <button id="editor-save" class="blue-btn">Сохранить</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="folder-overlay" class="hidden">
+      <div class="editor" style="max-width: 400px;">
+        <h3 style="margin-bottom: 10px; font-weight: 500;">Новая папка</h3>
+        <input type="text" id="folder-name-input" placeholder="Название папки...">
+        <div class="editor-buttons">
+          <span class="spacer"></span>
+          <button id="folder-cancel">Отмена</button>
+          <button id="folder-save" class="blue-btn">Создать</button>
         </div>
       </div>
     </div>

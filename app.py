@@ -10,6 +10,7 @@ from db import init_db
 from extensions import limiter
 from routes.auth import auth_bp
 from routes.notes import notes_bp
+from routes.folders import folders_bp # <--- НОВОЕ
 
 BASE_DIR = Path(__file__).resolve().parent
 STATIC_DIR = BASE_DIR / "static"
@@ -19,6 +20,7 @@ limiter.init_app(app)
 
 app.register_blueprint(auth_bp, url_prefix="/api/auth")
 app.register_blueprint(notes_bp, url_prefix="/api/notes")
+app.register_blueprint(folders_bp, url_prefix="/api/folders") # <--- НОВОЕ
 
 
 @app.route("/")

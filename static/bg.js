@@ -6,7 +6,7 @@
   var width, height;
   var particles = [];
   var PARTICLE_COUNT = 80;
-  var MAX_DISTANCE = 200;
+  var MAX_DISTANCE = 120;
   var PARTICLE_SPEED = 0.2;
   var mouse = { x: null, y: null };
 

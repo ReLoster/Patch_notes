@@ -81,7 +81,7 @@ button {
   z-index: -1;
   display: block;
   pointer-events: none;
-  filter: blur(2px);
+  filter: blur(1px);
 }
 
 .auth-page {
@@ -523,23 +523,73 @@ button {
 
 @media (max-width: 900px) {
   .app-body { flex-direction: column; }
+
   .sidebar {
     width: 100%;
     flex-direction: row;
+    flex-wrap: wrap; /* Позволяет папкам переноситься на новую строку */
     padding: 8px;
     gap: 8px;
     border-right: none;
     border-bottom: 1px solid var(--border);
     border-radius: 0;
   }
+
+  /* Скрываем сайдбар полностью при сворачивании на мобилке */
+  .sidebar.collapsed {
+    display: none; 
+  }
+
   .nav-btn {
     border-radius: 24px;
     padding: 10px 16px;
     flex: 1;
     justify-content: center;
+    width: auto;
   }
+
+  /* Папки на мобилке идут в ряд под кнопками */
+  .folders-section {
+    flex-basis: 100%;
+    padding: 8px 0 0 0;
+    margin-top: 4px;
+    border-top: 1px solid var(--border);
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .folders-header {
+    width: 100%;
+    padding-left: 8px;
+    margin-bottom: 4px;
+  }
+
+  .folder-item {
+    width: auto;
+    padding: 6px 14px;
+    margin-bottom: 0;
+    border-radius: 20px;
+    background: var(--bg-grey);
+    border: 1px solid var(--border);
+  }
+
+  .folder-item.active {
+    border-color: var(--purple);
+  }
+
   .content { padding: 18px; }
   #notes-grid { grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); }
+}
+
+.nav-btn, .folder-item {
+  white-space: nowrap;
+  flex-shrink: 0; 
+}
+  
+.folders-section {
+  overflow-x: auto;
+  flex-wrap: nowrap; 
 }
 
 @media (max-width: 640px) {
@@ -554,16 +604,32 @@ button {
   .topbar-right { margin-left: auto; gap: 8px; }
   #user-name { font-size: 13px; }
   .logout-btn { padding: 8px 14px; font-size: 13px; }
+  
   .content { padding: 14px 12px; }
   .content-header { flex-direction: column; align-items: stretch; gap: 10px; margin-bottom: 14px; }
   .content-header h2 { font-size: 20px; }
-  .content-actions { width: 100%; gap: 8px; }
-  #sort-select { flex: 1 1 auto; min-width: 0; font-size: 13px; padding: 10px 32px 10px 14px; }
-  #new-note-btn { flex: 1 1 auto; padding: 10px 16px; font-size: 14px; white-space: nowrap; }
+  
+  /* Кнопки фильтрации и создания на всю ширину */
+  .content-actions { 
+    width: 100%; 
+    gap: 8px; 
+    flex-direction: column; 
+    align-items: stretch;
+  }
+  
+  /* Кастомный дропдаун растягивается */
+  .custom-select { width: 100%; }
+  .custom-select-trigger { justify-content: space-between; }
+  .custom-select-options { width: 100%; min-width: 0; }
+
+  #new-note-btn { width: 100%; text-align: center; padding: 10px 16px; font-size: 14px; }
+  
   #notes-grid { grid-template-columns: 1fr; gap: 12px; }
+  
   .auth-card { padding: 30px 20px 22px; border-radius: 18px; }
   .auth-card h1 { font-size: 22px; }
   .auth-logo { font-size: 36px; }
+  
   .editor { padding: 16px; border-radius: 14px; gap: 10px; }
   .editor input, .editor textarea { padding: 10px 12px; font-size: 14px; }
   .editor-buttons { gap: 6px; }
@@ -575,19 +641,120 @@ button {
     text-align: center;
     white-space: nowrap;
   }
-  .nav-btn { padding: 10px 12px; font-size: 14px; gap: 8px; }
+  
   .site-footer { padding: 14px 12px; font-size: 12px; }
   .site-footer-inner { gap: 4px 12px; }
   .site-footer .sep { display: none; }
 }
 
 @media (max-width: 400px) {
-  .nav-btn span { display: none; }
-  .nav-btn { padding: 10px; }
+  .nav-btn { padding: 10px 14px; font-size: 13px; }
   .content-header h2 { font-size: 18px; }
   #new-note-btn { font-size: 12px; padding: 10px 12px; }
-  #sort-select { font-size: 12px; padding: 10px 12px; }
   .note-card { padding: 14px; }
   .note-card h3 { font-size: 15px; }
   .note-card p { font-size: 13px; }
+}
+
+.sidebar { 
+  transition: width 0.3s ease, padding 0.3s ease, transform 0.3s ease; 
+  overflow: hidden;
+}
+.sidebar.collapsed { 
+  width: 0; 
+  padding: 0; 
+  border-right: none;
+}
+
+.folders-section { 
+  padding: 16px 16px 16px 0; 
+  margin-top: 10px; 
+  border-top: 1px solid var(--border);
+}
+.folders-header { 
+  display: flex; justify-content: space-between; align-items: center;
+  font-size: 12px; color: var(--text-grey); text-transform: uppercase; margin-bottom: 8px; padding-left: 16px;
+}
+.folder-item { 
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 8px 12px 8px 16px; border-radius: 8px; cursor: pointer; color: var(--text); margin-bottom: 2px;
+  font-size: 14px;
+}
+.folder-item:hover { background: rgba(255,255,255,0.06); }
+.folder-item.active { background: var(--purple-bg); color: var(--purple); font-weight: 600; }
+.folder-item .del-btn { opacity: 0; transition: opacity 0.2s; padding: 0 5px; font-size: 18px; }
+.folder-item:hover .del-btn { opacity: 1; }
+.folder-item .del-btn:hover { color: var(--red); }
+
+.custom-select { position: relative; user-select: none; }
+.custom-select-trigger {
+  background: rgba(40, 42, 58, 0.85); padding: 10px 16px; border-radius: 20px;
+  border: 1px solid var(--border); cursor: pointer; display: flex; gap: 10px; align-items: center;
+  font-size: 14px; font-weight: 500; transition: background .15s;
+}
+.custom-select-trigger:hover { background: rgba(60, 62, 80, 0.95); }
+.custom-select-trigger .arrow { font-size: 10px; opacity: 0.6; margin-left: auto; }
+.custom-select-options {
+  position: absolute; top: 100%; right: 0; margin-top: 6px;
+  background: rgba(22, 24, 32, 0.98); border: 1px solid var(--border);
+  border-radius: 12px; padding: 6px; z-index: 10; min-width: 220px;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.5); backdrop-filter: blur(6px);
+}
+.custom-select-options div { 
+  padding: 10px 16px; cursor: pointer; transition: background 0.15s; 
+  border-radius: 8px; font-size: 14px;
+}
+.custom-select-options div:hover { background: var(--purple-bg); color: var(--purple); }
+
+.note-card { position: relative; }
+.note-card .favorite-btn {
+  position: absolute; top: 14px; right: 14px; font-size: 18px; cursor: pointer;
+  color: rgba(255,255,255,0.15); transition: color 0.2s, transform 0.2s; z-index: 2;
+}
+.note-card .favorite-btn:hover { transform: scale(1.1); color: rgba(255,215,0,0.5); }
+.note-card .favorite-btn.active { color: #ffd700; }
+.note-card.is-favorite { border-color: rgba(255, 215, 0, 0.3); }
+
+.drag-ghost {
+  position: absolute; top: -1000px; left: -1000px;
+  background: var(--purple); color: #0a0a1a; padding: 10px 16px;
+  border-radius: 8px; font-weight: 600; font-size: 14px;
+  display: flex; align-items: center; gap: 8px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+  pointer-events: none;
+}
+
+.folder-item.drop-target {
+  background: var(--purple-bg) !important;
+  outline: 2px dashed var(--purple);
+  outline-offset: -2px;
+  color: var(--purple);
+}
+
+#folder-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, .7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10;
+  padding: 20px;
+  backdrop-filter: blur(4px);
+}
+
+#folder-name-input {
+  background: var(--bg-grey);
+  border: 1px solid var(--border);
+  color: var(--text);
+  border-radius: 8px;
+  padding: 12px 14px;
+  font-size: 15px;
+  font-family: inherit;
+  width: 100%;
+  margin-bottom: 10px;
+}
+#folder-name-input:focus {
+  outline: none;
+  border-color: var(--purple);
 }

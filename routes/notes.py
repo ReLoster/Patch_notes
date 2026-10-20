@@ -1,6 +1,5 @@
 import time
 from flask import Blueprint, request, jsonify, g
-
 from db import get_db
 from auth_utils import require_auth
 
@@ -13,6 +12,8 @@ def map_note(row):
         "title": row["title"],
         "text": row["text"],
         "deleted": bool(row["deleted"]),
+        "isFavorite": bool(row["is_favorite"]),
+        "folderId": row["folder_id"],
         "position": row["position"],
         "createdAt": row["created_at"],
         "updatedAt": row["updated_at"],
@@ -45,14 +46,15 @@ def create_note():
     data = request.get_json(silent=True) or {}
     title = str(data.get("title", ""))
     text = str(data.get("text", ""))
+    folder_id = data.get("folderId")
     now = int(time.time() * 1000)
 
     conn = get_db()
     try:
         cur = conn.execute(
-            "INSERT INTO notes (user_id, title, text, deleted, position, created_at, updated_at) "
-            "VALUES (?, ?, ?, 0, 0, ?, ?)",
-            (g.user["id"], title, text, now, now),
+            "INSERT INTO notes (user_id, title, text, deleted, is_favorite, folder_id, position, created_at, updated_at) "
+            "VALUES (?, ?, ?, 0, 0, ?, 0, ?, ?)",
+            (g.user["id"], title, text, folder_id, now, now),
         )
         note_id = cur.lastrowid
         conn.execute("UPDATE notes SET position = ? WHERE id = ?", (-note_id, note_id))
@@ -80,6 +82,10 @@ def update_note(note_id):
             fields.append("text = ?"); values.append(data["text"])
         if isinstance(data.get("deleted"), bool):
             fields.append("deleted = ?"); values.append(1 if data["deleted"] else 0)
+        if isinstance(data.get("isFavorite"), bool):
+            fields.append("is_favorite = ?"); values.append(1 if data["isFavorite"] else 0)
+        if "folderId" in data:
+            fields.append("folder_id = ?"); values.append(data["folderId"])
 
         if not fields:
             return jsonify(error="Нет полей для обновления"), 400
